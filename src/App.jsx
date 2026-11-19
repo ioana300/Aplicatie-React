@@ -2,17 +2,16 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 
 import Home from "./pages/Home";
-import InternshipList from "./pages/InternshipList";
-import InternshipDetails from "./pages/InternshipDetails";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import StudentProfile from "./pages/StudentProfile";
+import InternshipList from "./pages/InternshipList";
+import InternshipDetails from "./pages/InternshipDetails";
 import MyApplications from "./pages/MyApplications";
-import CompanyProfile from "./pages/CompanyProfile";
+import StudentProfile from "./pages/StudentProfile";
 import CompanyDashboard from "./pages/CompanyDashboard";
+import CompanyProfile from "./pages/CompanyProfile";
 
 import "./App.css";
 
@@ -23,17 +22,18 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/internships" element={<InternshipList />} />
-        <Route path="/internships/:id" element={<InternshipDetails />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/student/profile" element={<StudentProfile />} />
-        <Route path="/student/applications" element={<MyApplications />} />
-        <Route path="/company/profile" element={<CompanyProfile />} />
-        <Route path="/company/dashboard" element={<CompanyDashboard />} />
-      </Routes>
 
-      <Footer />
+        <Route path="/internships" element={<InternshipList />} />
+        <Route path="/internships/:id" element={<InternshipDetails />} />
+
+        <Route path="/applications" element={<MyApplications />} />
+        <Route path="/student-profile" element={<StudentProfile />} />
+
+        <Route path="/company-dashboard" element={<CompanyDashboard />} />
+        <Route path="/company-profile" element={<CompanyProfile />} />
+      </Routes>
     </BrowserRouter>
   );
 }

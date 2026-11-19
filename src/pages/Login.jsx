@@ -1,14 +1,41 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   function handleSubmit(event) {
     event.preventDefault();
-    alert("Autentificarea va fi conectată la sistemul de utilizatori.");
+
+    const users = JSON.parse(
+      localStorage.getItem("users") || "[]"
+    );
+
+    const user = users.find(
+      item =>
+        item.email.toLowerCase() === email.toLowerCase() &&
+        item.password === password
+    );
+
+    if (!user) {
+      alert("Email sau parolă incorectă!");
+      return;
+    }
+
+    localStorage.setItem("currentUser", JSON.stringify(user));
+    window.dispatchEvent(new Event("authChanged"));
+
+    alert("Te-ai autentificat cu succes!");
+
+    navigate(
+      user.role === "student"
+        ? "/student-profile"
+        : "/company-profile"
+    );
   }
 
   return (
@@ -22,7 +49,7 @@ function Login() {
           <input
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
             required
           />
 
@@ -30,17 +57,18 @@ function Login() {
           <input
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
             required
           />
 
-          <button className="primary-button">
+          <button type="submit" className="primary-button">
             Intră în cont
           </button>
         </form>
 
         <p>
-          Nu ai cont? <Link to="/register">Înregistrează-te</Link>
+          Nu ai cont?
+          <Link to="/register"> Înregistrează-te</Link>
         </p>
       </div>
     </div>

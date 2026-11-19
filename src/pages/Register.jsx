@@ -1,8 +1,10 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -20,18 +22,47 @@ function Register() {
   function handleSubmit(event) {
     event.preventDefault();
 
-    localStorage.setItem("user", JSON.stringify(form));
+    const users = JSON.parse(
+      localStorage.getItem("users") || "[]"
+    );
 
-    alert("Contul a fost creat!");
+    const existingUser = users.find(
+      user => user.email.toLowerCase() === form.email.toLowerCase()
+    );
+
+    if (existingUser) {
+      alert("Există deja un cont cu acest email!");
+      return;
+    }
+
+    const newUser = {
+      ...form,
+      id: Date.now()
+    };
+
+    users.push(newUser);
+
+    localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("currentUser", JSON.stringify(newUser));
+    window.dispatchEvent(new Event("authChanged"));
+
+    alert("Contul a fost creat cu succes!");
+
+    navigate(
+      form.role === "student"
+        ? "/student-profile"
+        : "/company-profile"
+    );
   }
 
   return (
     <div className="page-container">
       <div className="form-card">
         <h1>Creare cont InternHub</h1>
+        <p>Înregistrează-te pentru a descoperi oportunități.</p>
 
         <form onSubmit={handleSubmit}>
-          <label>Nume</label>
+          <label>Nume complet</label>
           <input
             name="name"
             value={form.name}
@@ -54,6 +85,7 @@ function Register() {
             name="password"
             value={form.password}
             onChange={handleChange}
+            minLength="6"
             required
           />
 
@@ -67,7 +99,7 @@ function Register() {
             <option value="company">Companie</option>
           </select>
 
-          <button className="primary-button">
+          <button type="submit" className="primary-button">
             Creează cont
           </button>
         </form>
